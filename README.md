@@ -1,6 +1,6 @@
 # Projeto de Exibição de Cartazes de Filmes
 
-Olá desenvolvedores!
+![Projeto de Exibição de Cartazes de Filmes](/public/tela.png)
 
 Bem-vindos ao nosso projeto simples, voltado para iniciantes! Aqui, construímos uma aplicação que exibe filmes com base nas categorias que escolhemos. Este README fornecerá uma visão geral do projeto, suas funcionalidades principais e como você pode começar a contribuir ou utilizá-lo.
 
