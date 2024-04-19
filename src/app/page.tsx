@@ -14,19 +14,24 @@ export default function Home() {
   const [data, setData] = useState<DataProps[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [activeCategory, setActiveCategory] = useState('popular') // Default active category
+  const [activeCategory, setActiveCategory] = useState('popular')
+  const [page, setPage] = useState(1) // Estado para controlar a paginação
 
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${activeCategory}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+        `https://api.themoviedb.org/3/movie/${activeCategory}?api_key=${process.env.NEXT_PUBLIC_API_KEY}&page=${page}`,
       )
-      setData(response.data.results)
+      if (page > 1) {
+        setData((prevData) => [...prevData, ...response.data.results]) // Concatena novos resultados com os já existentes
+      } else {
+        setData(response.data.results) // Define os dados na primeira busca
+      }
       setLoading(false)
     } catch (error) {
       console.error(error)
     }
-  }, [activeCategory])
+  }, [activeCategory, page]) // Inclua page como dependência
 
   useEffect(() => {
     fetchData()
@@ -38,12 +43,17 @@ export default function Home() {
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category)
+    setPage(1) // Reinicia a paginação ao mudar de categoria
     setLoading(true)
   }
 
   const filteredData = data.filter((item) => {
     return item.title.toLowerCase().includes(search.toLowerCase())
   })
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1) // Incrementa a página atual
+  }
 
   return (
     <main className="container mx-auto px-4">
@@ -122,16 +132,17 @@ export default function Home() {
               ))}
             </>
           ) : (
-            filteredData.map((item, index) => (
-              <Data
-                key={index}
-                title={item.title}
-                vote_average={item.vote_average}
-                release_date={item.release_date}
-                poster_path={item.poster_path}
-              />
-            ))
+            filteredData.map((item, index) => <Data key={index} {...item} />)
           )}
+        </div>
+        <div className="flex justify-center my-4">
+          <button
+            type="button"
+            className="bg-gray-500 text-white px-4 py-2 rounded-md"
+            onClick={handleLoadMore}
+          >
+            Carregar Mais
+          </button>
         </div>
       </div>
     </main>

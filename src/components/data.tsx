@@ -18,7 +18,7 @@ export default function Data({
     <div className="border border-gray-400 p-4 rounded-lg">
       <h2 className="text-xl font-bold">{title}</h2>
       <p>Nota: {vote_average}</p>
-      <p>Lançamento: {release_date}</p>
+      <p>Lançamento: {new Date(release_date).toLocaleDateString()}</p>
       <Image
         src={`https://image.tmdb.org/t/p/w500${poster_path}`}
         alt={title}
